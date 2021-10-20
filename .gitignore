@@ -17,7 +17,7 @@ modoboa_test
 ./build/
 dist/
 venv
-
+.env
 # JS stuff
 node_modules
 /static/dist
