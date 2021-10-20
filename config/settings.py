@@ -1,17 +1,5 @@
-"""
-Django settings for test_project project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/2.2/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/2.2/ref/settings/
-"""
-
 from logging.handlers import SysLogHandler
 import os
-
-from modoboa.test_settings import *  # noqa
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -96,6 +84,25 @@ except ImportError:
 else:
     MODOBOA_APPS += ("modoboa.ldapsync",)
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "modoboa",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "localhost",
+        "PORT": 5432,
+        "ATOMIC_REQUESTS": True,
+        "OPTIONS": {
+            "client_encoding": "UTF8",
+            "sslmode": "disable"
+        },
+        "TEST": {
+            "CHARSET": "UTF8",
+        },
+    },
+}
+
 INSTALLED_APPS += MODOBOA_APPS
 
 AUTH_USER_MODEL = 'core.User'
@@ -151,9 +158,9 @@ TEMPLATES = [
     },
 ]
 
-ROOT_URLCONF = 'test_project.urls'
+ROOT_URLCONF = 'config.urls'
 
-WSGI_APPLICATION = 'test_project.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -174,7 +181,7 @@ USE_TZ = True
 STATIC_URL = '/sitestatic/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'sitestatic')
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, '..', 'modoboa', 'bower_components'),
+    os.path.join(BASE_DIR, '..', 'modoboa', 'modoboa/bower_components'),
 )
 
 MEDIA_URL = '/media/'
@@ -330,3 +337,32 @@ DISABLE_DASHBOARD_EXTERNAL_QUERIES = False
 # Load settings from extensions
 
 LDAP_SERVER_PORT = os.environ.get('LDAP_SERVER_PORT', 3389)
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+
+AWS_ACCESS_KEY_ID = "AKIAYXQWF77VOPOVKDPL"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_STORAGE_BUCKET_NAME = "webmail-dibtech"
+AWS_S3_REGION_NAME = "ap-south-1"
+
+# AWS Configurations
+# AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+# AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+# AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
+AWS_DEFAULT_ACL = None
+# AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL')
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=86400",
+}
+AWS_S3_FILE_OVERWRITE = False
+
+STATICFILES_STORAGE = "config.storages.StaticRootS3Boto3Storage"
+STATIC_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.ap-south-1.amazonaws.com/static/"
+# endregion
+DEFAULT_FILE_STORAGE = "config.storages.MediaRootS3Boto3Storage"
+MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.ap-south-1.amazonaws.com/media/"
+
+
+MODOBOA_CUSTOM_LOGO = os.path.join(STATIC_URL, "css/dibtech.png")

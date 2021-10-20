@@ -16,6 +16,7 @@ modoboa_test
 .coverage
 ./build/
 dist/
+venv
 
 # JS stuff
 node_modules
