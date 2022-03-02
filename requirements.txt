@@ -22,7 +22,7 @@ django-reversion==3.0.9
 django-storages==1.12.2
 django-xforwardedfor-middleware==2.0
 djangorestframework==3.12.4
-djangorestframework-simplejwt==4.8.0
+djangorestframework-simplejwt==5.1.0
 dnspython==2.1.0
 drf-flex-fields==0.9.5
 drf-spectacular==0.20.2
